@@ -1,0 +1,41 @@
+<%- include("../layout/header") %>
+
+    <%- include("../layout/sidebar") %>
+        <div id="hongvando"></div>
+        <!--/.main-->
+        <%- include("../layout/footer") %>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script>
+                function getComments(page = 1) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/ajax/get-comment-admin",
+                        dataType: 'json',
+                        data: {
+                            page,
+                        },
+                        success: function(result) {
+                            if (result && result.data.html) {
+                                $('#hongvando').html(result.data.html)
+                            }
+                        }
+
+                    })
+                }
+
+                $(document).ready(function() {
+                    // $('#tt').bootstrapTable()
+
+                    getComments()
+
+                    $(document).on("click", ".page-link", function(e) {
+                        e.preventDefault()
+                        const _that = $(this)
+                        const page = _that.data("page")
+
+                        console.log(_that.data())
+                        getComments(page)
+                    })
+
+                })
+            </script>
