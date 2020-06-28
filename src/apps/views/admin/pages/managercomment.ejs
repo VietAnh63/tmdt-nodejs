@@ -1,10 +1,65 @@
 <%- include("../layout/header") %>
 
     <%- include("../layout/sidebar") %>
-        <div id="hongvando"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+            <div class="row">
+                <ol class="breadcrumb">
+                    <li><a href="#"><svg class="glyph stroked home">
+                        <use xlink:href="#stroked-home"></use>
+                   </svg></a></li>
+                    <li class="active">Quản lý bình luận</li>
+                </ol>
+            </div>
+            <!--/.row-->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Quản lý bình luận</h1>
+                </div>
+            </div>
+            <!--/.row-->
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table id="tt" data-toolbar="#toolbar" data-toggle="table" class="display table table-bordered">
+
+                                <thead>
+                                    <tr>
+                                        <th data-field="id" data-sortable="true">
+                                            <div class="th-inner">ID</div>
+                                        </th>
+                                        <th>
+                                            <div class="th-inner">Tên sản phẩm</div>
+                                        </th>
+                                        <th>
+                                            <div class="th-inner">Bình Luận</div>
+                                        </th>
+                                        <th>
+                                            <div class="th-inner">Thời gian</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hongvando">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination" id="phamvietanh">
+
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/.row-->
+        </div>
         <!--/.main-->
         <%- include("../layout/footer") %>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
             <script>
                 function getComments(page = 1) {
                     $.ajax({
@@ -15,8 +70,9 @@
                             page,
                         },
                         success: function(result) {
-                            if (result && result.data.html) {
-                                $('#hongvando').html(result.data.html)
+                            if (result && result.data.comments && result.data.pages) {
+                                $('#hongvando').html(result.data.comments)
+                                $('#phamvietanh').html(result.data.pages)
                             }
                         }
 
@@ -32,8 +88,6 @@
                         e.preventDefault()
                         const _that = $(this)
                         const page = _that.data("page")
-
-                        console.log(_that.data())
                         getComments(page)
                     })
 

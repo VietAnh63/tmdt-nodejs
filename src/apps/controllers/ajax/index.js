@@ -104,12 +104,14 @@ exports.getCommentForAdmin = async(req, res) => {
     // get path of folder views
     const viewPath = req.app.get("views")
         //console.log(viewPath)
-    const html = await ejs.renderFile(path.join(viewPath, "admin/components/comment-admin.ejs"), { products, total: totalDocuments, range: rangerForDot, page, totalPages })
-    console.log("html", html)
+    const html_comment = await ejs.renderFile(path.join(viewPath, "admin/components/comment-admin.ejs"), { products })
+    const html_page = await ejs.renderFile(path.join(viewPath, "admin/components/page-comment.ejs"), { products, total: totalDocuments, range: rangerForDot, page, totalPages })
+
     res.json({
         status: "success",
         data: {
-            html: html
+            comments: html_comment,
+            pages: html_page
         }
     })
 }
