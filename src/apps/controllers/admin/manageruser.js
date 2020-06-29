@@ -147,3 +147,57 @@ module.exports.updateuser = async function(req, res) {
     res.render('admin/pages/manageredituser', { error, user })
 
 }
+
+module.exports.changeInfor = async function(req, res) {
+    const { id } = req.params
+    const user = await User.findById(id)
+    res.render("admin/pages/changeinfor", { user, error: "" })
+
+}
+
+module.exports.updateInfor = async function(req, res) {
+    const { id } = req.params
+    const email = req.body.user_mail
+    const old_pass = req.body.old_user_pass
+    const new_pass = req.body.new_user_pass
+    const re_pass = req.body.user_re_pass
+    const full_name = req.body.full_name
+    const bodySchema = joi.object({
+        user_fullname: joi.string().required()
+    }).unknown()
+
+    const value = await bodySchema.validateAsync(req.body).catch(err => err)
+    if (value instanceof Error) {
+        return res.redirect(`/infor-user/${id}`)
+    }
+    let error
+    const user_mail = await User.findOne({ user_mail: email })
+    const user = await User.findById(id)
+
+    if (user_mail && user.user_mail !== email) {
+        error = "Email đã tồn tại rồi"
+    }
+
+    if (old_pass !== user.user_pass) {
+        error = "Mật khẩu cũ không đúng"
+    }
+
+    if (new_pass !== re_pass) {
+        error = "Mật khẩu mới không khớp"
+    }
+
+    if ((!user_mail || user.user_mail === email) && (new_pass === re_pass) && (old_pass === user.user_pass)) {
+        const userUpdate = {
+            user_fullname: value.user_fullname,
+            user_mail: value.user_mail,
+            user_pass: value.new_user_pass
+        }
+
+        await User.updateOne({ _id: id }, { $set: userUpdate })
+        return res.redirect("/admin/user")
+
+    }
+    res.render('admin/pages/changeinfor', { error, user })
+
+
+}

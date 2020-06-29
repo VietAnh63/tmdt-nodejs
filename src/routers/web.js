@@ -60,6 +60,13 @@ router.get("/admin/category", CategoryController.managercategory)
 router.get("/admin/comment", CommentController.managercomment)
 router.get("/admin/deletecomment/:id", CommentController.deletecomment)
 
+router.route("/infor-user/:id").get(UserController.changeInfor).post(UserController.updateInfor)
+
+
+
+
+
+
 router.get("/", ClientController.home)
 router.get("/product-detail-:id", ClientController.productDetail)
 router.get("/category-:id", ClientController.category)
