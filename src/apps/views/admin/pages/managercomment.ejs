@@ -23,21 +23,21 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <table id="tt" data-toolbar="#toolbar" data-toggle="table" class="display table table-bordered">
+                            <table data-toolbar="#toolbar" data-toggle="table">
 
                                 <thead>
                                     <tr>
                                         <th data-field="id" data-sortable="true">
-                                            <div class="th-inner">ID</div>
+                                            <div>ID</div>
                                         </th>
                                         <th>
-                                            <div class="th-inner">Tên sản phẩm</div>
+                                            <div>Tên sản phẩm</div>
                                         </th>
                                         <th>
-                                            <div class="th-inner">Bình Luận</div>
+                                            <div>Bình Luận</div>
                                         </th>
                                         <th>
-                                            <div class="th-inner">Thời gian</div>
+                                            <div>Thời gian</div>
                                         </th>
                                     </tr>
                                 </thead>
@@ -80,8 +80,6 @@
                 }
 
                 $(document).ready(function() {
-                    // $('#tt').bootstrapTable()
-
                     getComments()
 
                     $(document).on("click", ".page-link", function(e) {

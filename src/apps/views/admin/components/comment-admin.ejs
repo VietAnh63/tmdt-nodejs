@@ -10,6 +10,7 @@
                     <span class="label label-info"><%= comment.info.email%></span>
                     <span class="label label-danger">==></span>
                     <span class="label label-success"><%= comment.content%></span>
+                    <a style="text-decoration: none" href="/admin/deletecomment/<%=comment._id%>" onclick="return confirm('Bạn muốn xóa bình luận?');"><span class="label label-danger">Xóa</span></a>
                 </div>
                 <%})%>
 
