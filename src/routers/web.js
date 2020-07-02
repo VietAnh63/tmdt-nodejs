@@ -78,6 +78,8 @@ router.post("/product-detail-:id/comments", ClientController.addComment)
 
 router.post("/ajax/get-comment-product", AjaxContrller.getCommentForProduct)
 router.post("/ajax/get-comment-admin", AjaxContrller.getCommentForAdmin)
+router.post("/ajax/update-cart", AjaxContrller.updateCart)
+router.post("/ajax/delete-cart", AjaxContrller.deleteCart)
 
 
 

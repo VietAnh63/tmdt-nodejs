@@ -3,6 +3,9 @@ const CommentModel = mongoose.model("Comment")
 const ProductModel = mongoose.model("Product")
 const ejs = require("ejs")
 const path = require("path")
+const Joi = require("@hapi/joi")
+const _ = require("lodash")
+
 exports.getCommentForProduct = async(req, res) => {
 
     const { id } = req.body
@@ -113,4 +116,85 @@ exports.getCommentForAdmin = async(req, res) => {
             pages: html_page
         }
     })
+}
+
+exports.updateCart = async(req, res) => {
+    const bodySchema = Joi.object({
+        qty: Joi.number().required(),
+        id: Joi.string().required(),
+    })
+
+    const value = await bodySchema.validateAsync(req.body)
+
+    //const cart = JSON.parse(JSON.stringify(req.session.cart || []))
+    const cart = _.cloneDeep(req.session.cart || [])
+    const { id, qty } = value
+
+    const newCart = cart.map((item) => {
+
+        if (item.id === id && qty >= 1) {
+            item.qty = qty
+        }
+        return item
+    })
+
+    req.session.cart = newCart
+    const ids = newCart.map(prd => prd.id)
+
+
+
+    const products = await ProductModel.find({ _id: { $in: ids } })
+    const html = await renderHtml(req, "site/components/list-cart.ejs", { products, miniCart: newCart })
+    const totalCart = newCart.reduce((a, c) => a + c.qty, 0)
+
+    return res.json({
+        status: "success",
+        data: {
+            html: html,
+            totalCart
+        }
+    })
+
+}
+
+
+exports.deleteCart = async(req, res) => {
+    const bodySchema = Joi.object({
+
+        id: Joi.string().required()
+    })
+
+    const value = await bodySchema.validateAsync(req.body)
+
+    //const cart = JSON.parse(JSON.stringify(req.session.cart || []))
+    const cart = _.cloneDeep(req.session.cart || [])
+    const { id } = value
+
+    const newCart = cart.filter((item) => item.id !== id)
+
+    req.session.cart = newCart
+    const ids = newCart.map((prd) => prd.id)
+
+
+
+    const products = await ProductModel.find({ _id: { $in: ids } })
+    const html = await renderHtml(req, "site/components/list-cart.ejs", { products, miniCart: newCart })
+    const totalCart = newCart.reduce((a, c) => a + c.qty, 0)
+    console.log(html)
+    return res.json({
+        status: "success",
+        data: {
+            html: html,
+            totalCart
+        }
+    })
+}
+
+
+
+
+async function renderHtml(req, view, data = {}) {
+    const viewPath = req.app.get("views")
+    const html = await ejs.renderFile(path.join(viewPath, view), data)
+    return html
 }

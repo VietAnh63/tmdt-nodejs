@@ -32,32 +32,8 @@
                                 <div class="cart-nav-item col-lg-2 col-md-2 col-sm-12">Tùy chọn</div>
                                 <div class="cart-nav-item col-lg-3 col-md-3 col-sm-12">Giá</div>
                             </div>
-                            <form method="post">
-                                <%let totalPrice = 0 %>
-                                    <% for ( let product of products) {%>
-                                        <%cart =miniCart.find(item => item.id === product.id) %>
-                                            <%totalPrice += (product.prd_price * cart.qty) %>
-                                                <div class="cart-item row">
-                                                    <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                                                        <img src="/images/products/<%=product.prd_image%>">
-                                                        <h4>product.prd_name</h4>
-                                                    </div>
-
-                                                    <div class="cart-quantity col-lg-2 col-md-2 col-sm-12">
-                                                        <input type="number" id="quantity" class="form-control form-blue quantity" value="<%=cart.qty%>" min="1">
-                                                    </div>
-                                                    <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b><%=product.prd_price * cart.qty%>VND</b><a href="#">Xóa</a></div>
-                                                </div>
-
-                                                <%}%>
-
-                                                    <div class="row">
-                                                        <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                                                            <button id="update-cart" class="btn btn-success" type="submit" name="sbm">Cập nhật giỏ hàng</button>
-                                                        </div>
-                                                        <div class="cart-total col-lg-2 col-md-2 col-sm-12"><b>Tổng cộng:</b></div>
-                                                        <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b><%=totalPrice%></b></div>
-                                                    </div>
+                            <form method="post" id="list-cart">
+                                <%- include( "components/list-cart",{products,miniCart})%>
                             </form>
 
                         </div>
@@ -110,6 +86,58 @@
         </div>
         <!--	End Body	-->
         <%-include("layout/footer")%>
+            <script>
+                $(document).ready(function() {
+                    $(document).on("blur", "input.quantity", function() {
+                        const self = $(this)
+                        const id = self.data("id")
+                        const value = self.val()
+
+                        $.ajax({
+                            url: "/ajax/update-cart",
+                            method: "POST",
+                            data: {
+                                id,
+                                qty: value
+                            },
+                            success: (data) => {
+                                if (data.status === "success") {
+                                    $("#list-cart").html(data.data.html)
+                                    $("#total-cart").html(data.data.totalCart)
+                                }
+                            }
+
+                        })
+
+                    });
+
+
+                    $(document).on("click", ".delete-cart", function(e) {
+                        e.preventDefault()
+                        const self = $(this)
+                        const id = self.data("id")
+
+                        const idDelete = confirm(
+                            "Ban Muon xoa khong"
+                        )
+                        if (!idDelete) return;
+                        $.ajax({
+                            url: "/ajax/delete-cart",
+                            method: "POST",
+                            data: {
+                                id
+                            },
+                            success: (data) => {
+                                if (data.status === "success") {
+                                    $("#list-cart").html(data.data.html)
+                                    $("#total-cart").html(data.data.totalCart)
+                                }
+                            }
+
+                        })
+                    })
+                })
+            </script>
 
 </body>
 

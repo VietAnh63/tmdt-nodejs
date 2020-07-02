@@ -153,7 +153,7 @@ module.exports.addToCart = async function(req, res, next) {
     } catch (error) {
         next(error)
     }
-    console.log(req.body)
+    //console.log(req.body)
 }
 
 module.exports.getCart = async function(req, res) {

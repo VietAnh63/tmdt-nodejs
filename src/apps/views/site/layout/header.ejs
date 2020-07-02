@@ -13,7 +13,7 @@
                 </form>
             </div>
             <div id="cart" class="col-lg-3 col-md-3 col-sm-12">
-                <a class="mt-4 mr-2" href="/cart">giỏ hàng</a><span class="mt-3"><%=miniCart.reduce((a,c) => a + c.qty, 0)%></span>
+                <a class="mt-4 mr-2" href="/cart">giỏ hàng</a><span class="mt-3" id="total-cart"><%=miniCart.reduce((a,c) => a + c.qty, 0)%></span>
             </div>
         </div>
     </div>
