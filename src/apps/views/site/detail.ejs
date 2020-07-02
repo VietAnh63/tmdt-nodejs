@@ -65,7 +65,17 @@
                                                                     <%}%>
 
                                     </ul>
-                                    <div id="add-cart"><a href="#">Mua ngay</a></div>
+                                    <% if (product.prd_status ===1){ %>
+                                        <form action="/add-to-cart" method="post">
+                                            <div id="add-cart">
+                                                <input type="hidden" name="quantity" value="1" />
+                                                <input type="hidden" name="prd_id" value="<%=product._id%>" />
+                                                <input name="sbm" type="submit" value="Mua ngay" class="btn btn-warning" />
+                                                <input name="sbm" type="submit" value="Thêm vào giỏ hàng" class="btn btn-info" />
+                                            </div>
+                                        </form>
+                                        <%}%>
+
                                 </div>
                             </div>
                             <div id="product-body" class="row">

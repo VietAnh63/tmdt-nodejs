@@ -68,6 +68,9 @@ router.route("/infor-user/:id").get(UserController.changeInfor).post(UserControl
 
 
 router.get("/", ClientController.home)
+
+router.post("/add-to-cart", ClientController.addToCart)
+router.get("/cart", ClientController.getCart)
 router.get("/product-detail-:id", ClientController.productDetail)
 router.get("/category-:id", ClientController.category)
 
@@ -75,5 +78,8 @@ router.post("/product-detail-:id/comments", ClientController.addComment)
 
 router.post("/ajax/get-comment-product", AjaxContrller.getCommentForProduct)
 router.post("/ajax/get-comment-admin", AjaxContrller.getCommentForAdmin)
+
+
+
 
 module.exports = router

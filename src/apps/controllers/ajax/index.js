@@ -6,7 +6,7 @@ const path = require("path")
 exports.getCommentForProduct = async(req, res) => {
 
     const { id } = req.body
-    console.log(req.body)
+        //console.log(req.body)
     const page = parseInt(req.body.page)
     const limit = 3;
     const skip = (page - 1) * limit

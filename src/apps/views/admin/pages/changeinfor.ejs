@@ -42,18 +42,27 @@
                                                 <label>Email</label>
                                                 <input type="text" name="user_mail" required value="<%=user.user_mail%>" class="form-control">
                                             </div>
-                                            <div class="form-group">
-                                                <label>Mật khẩu cũ</label>
-                                                <input name="old_user_pass" required type="password" class="form-control">
+
+
+                                            <div>
+                                                <button id="hide_show" style="margin-bottom: 7px; background-color:#008CBA; text-align: center; color:white"><i style="margin-right: 5px;" class="glyphicon glyphicon-new-window"></i>Đổi mật khẩu</button>
+
+                                                <div id="form_pass">
+                                                    <div class="form-group">
+                                                        <label>Mật khẩu cũ</label>
+                                                        <input required name="old_user_pass" type="password" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Mật khẩu mới</label>
+                                                        <input required name="new_user_pass" type="password" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Nhập lại mật khẩu</label>
+                                                        <input required name="user_re_pass" type="password" class="form-control">
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Mật khẩu mới</label>
-                                                <input name="new_user_pass" required type="password" class="form-control">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Nhập lại mật khẩu</label>
-                                                <input name="user_re_pass" required type="password" class="form-control">
-                                            </div>
+
                                             <button type="submit" name="sbm" class="btn btn-primary">Cập nhật</button>
                                             <button type="reset" class="btn btn-default">Làm mới</button>
                             </div>
@@ -67,5 +76,44 @@
 
         </div>
         <!--/.main-->
+        <script>
+            function getRequestChangePass() {
+                $.ajax({
+                    method: "POST",
+                    url: "/infor-user/<%=user._id%>",
+                    data: {
+                        data: '123'
+                    },
+                })
+            }
+
+            function getRequestChangePass_1() {
+                $.ajax({
+                    method: "POST",
+                    url: "/infor-user/<%=user._id%>",
+                    data: {
+                        data: '321'
+                    },
+                })
+            }
+
+            $(document).ready(function() {
+
+                $("#form_pass").hide()
+                if ($("#form_pass").is(":hidden") == true) {
+                    getRequestChangePass()
+                }
+                //getRequestChangePass()
+                $("#hide_show").click(function() {
+                    $("#form_pass").toggle("slow", function() {
+                        if ($("#form_pass").is(":hidden") == true) {
+                            getRequestChangePass()
+                        } else {
+                            getRequestChangePass_1()
+                        }
+                    });
+                });
+            });
+        </script>
 
         <%- include("../layout/footer") %>
