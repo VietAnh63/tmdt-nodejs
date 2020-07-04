@@ -88,26 +88,127 @@
         <%-include("layout/footer")%>
             <script>
                 $(document).ready(function() {
-                    $(document).on("blur", "input.quantity", function() {
+                    $(document).on("change", "input.quantity", function() {
                         const self = $(this)
                         const id = self.data("id")
                         const value = self.val()
-
-                        $.ajax({
-                            url: "/ajax/update-cart",
-                            method: "POST",
-                            data: {
-                                id,
-                                qty: value
-                            },
-                            success: (data) => {
-                                if (data.status === "success") {
-                                    $("#list-cart").html(data.data.html)
-                                    $("#total-cart").html(data.data.totalCart)
+                        const name_product = self.data("name")
+                        if (value > 0) {
+                            $.ajax({
+                                url: "/ajax/update-cart",
+                                method: "POST",
+                                data: {
+                                    id,
+                                    qty: value
+                                },
+                                success: (data) => {
+                                    if (data.status === "success") {
+                                        $("#list-cart").html(data.data.html)
+                                        $("#total-cart").html(data.data.totalCart)
+                                    }
                                 }
+
+                            })
+                        } else {
+                            const idDelete = confirm(
+                                `Bạn muốn xóa sản phẩm ${name_product} ? `
+                            )
+                            if (!idDelete) {
+                                $.ajax({
+                                    url: "/ajax/update-cart",
+                                    method: "POST",
+                                    data: {
+                                        id,
+                                        qty: 1
+                                    },
+                                    success: (data) => {
+                                        if (data.status === "success") {
+                                            $("#list-cart").html(data.data.html)
+                                            $("#total-cart").html(data.data.totalCart)
+                                        }
+                                    }
+
+                                })
+                            } else {
+                                $.ajax({
+                                    url: "/ajax/update-cart-0",
+                                    method: "POST",
+                                    data: {
+                                        id
+                                    },
+                                    success: (data) => {
+                                        if (data.status === "success") {
+                                            $("#list-cart").html(data.data.html)
+                                            $("#total-cart").html(data.data.totalCart)
+                                        }
+                                    }
+
+                                })
+
                             }
 
-                        })
+                        }
+
+                    })
+
+                    $(document).on("click", "input.quantity", function() {
+                        const self = $(this)
+                        const id = self.data("id")
+                        const value = self.val()
+                        const name_product = self.data("name")
+                        if (value > 0) {
+                            $.ajax({
+                                url: "/ajax/update-cart",
+                                method: "POST",
+                                data: {
+                                    id,
+                                    qty: value
+                                },
+                                success: (data) => {
+                                    if (data.status === "success") {
+                                        $("#list-cart").html(data.data.html)
+                                        $("#total-cart").html(data.data.totalCart)
+                                    }
+                                }
+
+                            })
+                        } else {
+                            if (!idDelete) {
+                                $.ajax({
+                                    url: "/ajax/update-cart",
+                                    method: "POST",
+                                    data: {
+                                        id,
+                                        qty: 1
+                                    },
+                                    success: (data) => {
+                                        if (data.status === "success") {
+                                            $("#list-cart").html(data.data.html)
+                                            $("#total-cart").html(data.data.totalCart)
+                                        }
+                                    }
+
+                                })
+                                return false
+                            } else {
+                                $.ajax({
+                                    url: "/ajax/update-cart-0",
+                                    method: "POST",
+                                    data: {
+                                        id
+                                    },
+                                    success: (data) => {
+                                        if (data.status === "success") {
+                                            $("#list-cart").html(data.data.html)
+                                            $("#total-cart").html(data.data.totalCart)
+                                        }
+                                    }
+
+                                })
+
+                            }
+
+                        }
 
                     });
 
@@ -116,9 +217,10 @@
                         e.preventDefault()
                         const self = $(this)
                         const id = self.data("id")
-
+                        const value = self.val()
+                        const name_product = self.data("name")
                         const idDelete = confirm(
-                            "Ban Muon xoa khong"
+                            `Bạn muốn xóa sản phẩm ${name_product} ?`
                         )
                         if (!idDelete) return;
                         $.ajax({
@@ -134,6 +236,22 @@
                                 }
                             }
 
+                        })
+                    })
+
+                    $(document).on("click", "#update-cart", function(e) {
+                        e.preventDefault()
+                        const idDelete = confirm(
+                            "Bạn muốn xóa toàn bộ giỏ hàng không ?"
+                        )
+                        if (!idDelete) return;
+                        $.ajax({
+                            url: "/ajax/delete-all-cart",
+                            method: "GET",
+                            success: (data = "") => {
+                                $("#list-cart").html(data.data.html)
+                                $("#total-cart").html(data.data.totalCart)
+                            }
                         })
                     })
                 })

@@ -118,7 +118,7 @@ exports.getCommentForAdmin = async(req, res) => {
     })
 }
 
-exports.updateCart = async(req, res) => {
+exports.updateCart = async function(req, res) {
     const bodySchema = Joi.object({
         qty: Joi.number().required(),
         id: Joi.string().required(),
@@ -127,6 +127,7 @@ exports.updateCart = async(req, res) => {
     const value = await bodySchema.validateAsync(req.body)
 
     //const cart = JSON.parse(JSON.stringify(req.session.cart || []))
+    //coppy session cart
     const cart = _.cloneDeep(req.session.cart || [])
     const { id, qty } = value
 
@@ -157,8 +158,7 @@ exports.updateCart = async(req, res) => {
 
 }
 
-
-exports.deleteCart = async(req, res) => {
+exports.updateCarttoOld = async function(req, res) {
     const bodySchema = Joi.object({
 
         id: Joi.string().required()
@@ -180,7 +180,41 @@ exports.deleteCart = async(req, res) => {
     const products = await ProductModel.find({ _id: { $in: ids } })
     const html = await renderHtml(req, "site/components/list-cart.ejs", { products, miniCart: newCart })
     const totalCart = newCart.reduce((a, c) => a + c.qty, 0)
-    console.log(html)
+
+    return res.json({
+        status: "success",
+        data: {
+            html: html,
+            totalCart
+        }
+    })
+
+}
+
+
+exports.deleteCart = async function(req, res) {
+    const bodySchema = Joi.object({
+
+        id: Joi.string().required()
+    })
+
+    const value = await bodySchema.validateAsync(req.body)
+
+    //const cart = JSON.parse(JSON.stringify(req.session.cart || []))
+    const cart = _.cloneDeep(req.session.cart || [])
+    const { id } = value
+
+    const newCart = cart.filter((item) => item.id !== id)
+
+    req.session.cart = newCart
+    const ids = newCart.map((prd) => prd.id)
+
+
+
+    const products = await ProductModel.find({ _id: { $in: ids } })
+    const html = await renderHtml(req, "site/components/list-cart.ejs", { products, miniCart: newCart })
+    const totalCart = newCart.reduce((a, c) => a + c.qty, 0)
+
     return res.json({
         status: "success",
         data: {
@@ -189,9 +223,20 @@ exports.deleteCart = async(req, res) => {
         }
     })
 }
-
-
-
+exports.deleteAllCart = async function(req, res) {
+    if (req.session.cart) {
+        req.session.cart = []
+        const html = await renderHtml(req, "site/components/list-cart.ejs", { products: [], miniCart: [] })
+        const totalCart = 0
+        return res.json({
+            status: "success",
+            data: {
+                html: html,
+                totalCart
+            }
+        })
+    }
+}
 
 async function renderHtml(req, view, data = {}) {
     const viewPath = req.app.get("views")

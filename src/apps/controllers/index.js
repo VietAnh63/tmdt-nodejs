@@ -6,7 +6,7 @@ const CommentController = require("./admin/managercomment")
 const LoginController = require("./admin/login")
 const ClientController = require("./client/index")
 
-const AjaxContrller = require("./ajax")
+const AjaxController = require("./ajax")
 
 
 module.exports = {
@@ -16,6 +16,6 @@ module.exports = {
     CategoryController,
     LoginController,
     ClientController,
-    AjaxContrller,
+    AjaxController,
     CommentController
 }

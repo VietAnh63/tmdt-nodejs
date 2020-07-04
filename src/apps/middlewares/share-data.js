@@ -5,6 +5,6 @@ module.exports = async function(req, res, next) {
 
     res.locals.menus = await CategoryModel.find()
     res.locals.miniCart = req.session.cart || []
-    console.log(req.session.cart)
+        //console.log(req.session.cart)
     next()
 }

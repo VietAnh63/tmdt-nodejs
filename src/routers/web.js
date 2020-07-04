@@ -16,8 +16,6 @@ const upload = multer({
     })
 })
 
-//const app = require("express")()
-//var app = express()
 const {
     AdminController,
     UserController,
@@ -25,19 +23,9 @@ const {
     CategoryController,
     LoginController,
     ClientController,
-    AjaxContrller,
+    AjaxController,
     CommentController
 } = require("../apps/controllers")
-    //const userController = require('../apps/controllers/admin/user.controller')
-    //router.get("/", userController.login)
-    // router.get("/form", (req,res)=>{
-    //      res.render("test/form", {username:""})
-    // })
-    // router.post("/form", (req,res)=>{
-    //      console.log("req.body",req.body);
-    //      res.render("test/form",{username: req.body.username})
-
-// })
 
 router.route("/login").get(checkLogin, LoginController.login).post(checkLogin, LoginController.postLogin)
 router.use("/admin", checkLogout)
@@ -62,11 +50,6 @@ router.get("/admin/deletecomment/:id", CommentController.deletecomment)
 
 router.route("/infor-user/:id").get(UserController.changeInfor).post(UserController.updateInfor)
 
-
-
-
-
-
 router.get("/", ClientController.home)
 
 router.post("/add-to-cart", ClientController.addToCart)
@@ -76,10 +59,12 @@ router.get("/category-:id", ClientController.category)
 
 router.post("/product-detail-:id/comments", ClientController.addComment)
 
-router.post("/ajax/get-comment-product", AjaxContrller.getCommentForProduct)
-router.post("/ajax/get-comment-admin", AjaxContrller.getCommentForAdmin)
-router.post("/ajax/update-cart", AjaxContrller.updateCart)
-router.post("/ajax/delete-cart", AjaxContrller.deleteCart)
+router.post("/ajax/get-comment-product", AjaxController.getCommentForProduct)
+router.post("/ajax/get-comment-admin", AjaxController.getCommentForAdmin)
+router.post("/ajax/update-cart", AjaxController.updateCart)
+router.post("/ajax/delete-cart", AjaxController.deleteCart)
+router.post("/ajax/update-cart-0", AjaxController.updateCarttoOld)
+router.get("/ajax/delete-all-cart", AjaxController.deleteAllCart)
 
 
 
