@@ -2,9 +2,10 @@ const mongoose = require("mongoose")
 const ProductModel = mongoose.model("Product")
 const CategoryModel = mongoose.model("Category")
 const CommentModel = mongoose.model("Comment")
+const {renderHtml} = require("../../../libs/utils")
 const slug = require("slug")
 const Joi = require("@hapi/joi")
-
+const transporter = require("../../../libs/transporter-mail")
 module.exports.home = async function(req, res) {
     const ProductFeatured = await ProductModel.find({ prd_featured: 1 }).limit(6).sort("-_id")
     const ProductNew = await ProductModel.find({ prd_featured: 0 }).limit(6).sort("-_id")
@@ -163,3 +164,48 @@ module.exports.getCart = async function(req, res) {
 
     res.render("site/cart", { products })
 }
+
+module.exports.order = async function(req,res, next){
+    const bodySchema = Joi.object({
+        name:Joi.string().required(),
+        phone: Joi.number().required(),
+        mail:Joi.string().email().required(),
+        add: Joi.string().required()
+    })
+    try{
+        const {name, phone, mail, add} = await bodySchema.validateAsync(req.body)
+        // Dung nodemailer
+        const cart = req.session.cart
+
+        const ids = cart.map(item => item.id)
+
+        const products = await ProductModel.find({
+            _id : {$in:ids}
+        })
+
+        const html = await renderHtml(req, "email/order", {products, cart, name, phone, add})
+        
+
+        await transporter.sendMail({
+            from: '"viet anh dep trai <mail@gmail.com>"',
+            to: mail,
+            subject: "Thông tin thanh toán mua hàng",
+            html: html
+        })
+
+        res.redirect(307,"/cart/order-success")
+
+    }catch(error){
+        next(error)
+    }
+}
+
+exports.orderSuccess = async function(req,res,next){
+    try{
+        req.session.cart = []
+        res.render("site/success")
+    }catch(error){
+        next(error)
+    }
+}
+

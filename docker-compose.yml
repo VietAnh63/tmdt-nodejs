@@ -1,0 +1,28 @@
+version: "3"
+networks:
+  my_network:
+    driver: bridge
+services:
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nodejs
+    container_name: nodejs
+    restart: unless-stopped
+    ports:
+      - "9000:3000"
+    volumes:
+      - ./:/app
+    networks:
+      - my_network
+  mongodb:
+    image: mongo:4.1.8-xenial
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - /Users/admin/data/db:/data/db
+    networks:
+      - my_network

@@ -1,4 +1,6 @@
-const { Router } = require("express")
+const {
+    Router
+} = require("express")
 const router = Router()
 const multer = require("multer")
 const path = require("path")
@@ -66,7 +68,8 @@ router.post("/ajax/delete-cart", AjaxController.deleteCart)
 router.post("/ajax/update-cart-0", AjaxController.updateCarttoOld)
 router.get("/ajax/delete-all-cart", AjaxController.deleteAllCart)
 
-
+router.post("/cart/order", ClientController.order)
+router.post("/cart/order-success", ClientController.orderSuccess)
 
 
 module.exports = router
