@@ -43,5 +43,19 @@ app.set("view engine", "ejs")
 app.use("/api", require("../routers/api"))
 app.use("/", require("../routers/web"))
 
+app.use("*", function(req,res){
+    return res.render("404")
+})
+
+//middleware fix loi
+app.use((error, req ,res, next)=>{
+    console.log("error", error.message)
+    return res.json({
+        status : "error",
+        message: error.message
+    })
+})
+
+
 
 module.exports = app

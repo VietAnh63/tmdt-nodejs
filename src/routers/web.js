@@ -3,6 +3,7 @@ const {
 } = require("express")
 const router = Router()
 const multer = require("multer")
+const Joi = require("@hapi/joi")
 const path = require("path")
 const checkLogin = require("../apps/middlewares/check-login")
 const checkLogout = require("../apps/middlewares/check-logout")
@@ -71,5 +72,19 @@ router.get("/ajax/delete-all-cart", AjaxController.deleteAllCart)
 router.post("/cart/order", ClientController.order)
 router.post("/cart/order-success", ClientController.orderSuccess)
 
+
+router.get("/error", async function (req,res,next){
+    const bodySchema = Joi.object({
+        a:Joi.string().required()
+    })
+    try {
+        const value = await bodySchema.validateAsync({a:"10"})
+        if(value.a !== 10){
+            throw new Error("a is not aqua 10")
+        }
+    }catch(error){
+        next(error)
+    }
+})
 
 module.exports = router
