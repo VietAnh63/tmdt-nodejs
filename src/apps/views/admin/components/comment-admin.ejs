@@ -1,0 +1,26 @@
+<% products.forEach((product, index)=>{ %>
+    <tr>
+        <td style="">
+            <%=index+1%>
+        </td>
+        <td style=""><span class="label label-warning"><%=product.prd_name%></span></td>
+        <td style="">
+            <%product.comments.forEach((comment, ind) => {%>
+                <div>
+                    <span class="label label-info"><%= comment.info.email%></span>
+                    <span class="label label-danger">==></span>
+                    <span class="label label-success"><%= comment.content%></span>
+                    <a style="text-decoration: none" href="/admin/deletecomment/<%=comment._id%>" onclick="return confirm('Bạn muốn xóa bình luận?');"><span class="label label-danger">Xóa</span></a>
+                </div>
+                <%})%>
+
+        </td>
+        <td class="form-group">
+            <%product.comments.forEach((comment, ind) => {%>
+                <div>
+                    <span class="label label-info"><%= comment.createdAt%></span>
+                </div>
+                <%})%>
+        </td>
+    </tr>
+    <%}) %>
