@@ -72,7 +72,7 @@ router.get("/ajax/delete-all-cart", AjaxController.deleteAllCart)
 router.post("/cart/order", ClientController.order)
 router.post("/cart/order-success", ClientController.orderSuccess)
 
-
+router.get("/search", ClientController.search);
 router.get("/error", async function (req,res,next){
     const bodySchema = Joi.object({
         a:Joi.string().required()

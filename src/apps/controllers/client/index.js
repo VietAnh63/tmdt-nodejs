@@ -209,3 +209,17 @@ exports.orderSuccess = async function(req,res,next){
     }
 }
 
+exports.search = async function (req, res, next) {
+    try {
+      const { q = "" } = req.query;
+  
+      const products = await ProductModel.find({
+        $text: {
+          $search: q,
+        },
+      })
+      return res.render("site/search", { q, products });
+    } catch (error) {
+      next(error)
+    }
+  }
